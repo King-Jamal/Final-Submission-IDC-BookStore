@@ -44,8 +44,39 @@ class BookController extends Controller
             'description'=>$request->description
         ]);
         if($create){
-            return response(['message' => 'Book created successfully'], 201);
+            return response()->json(['message' => 'Book created successfully'], 201);
         }
-        return response(['error' => 'Book not created'], 500);
+        return response()->json(['message' => 'Book not created'], 500);
+    }
+    public function update(Request $request,$id){
+        $book=Book::find($id);
+        if(!$book){
+            return response()->json(['message' => 'Book not found'], 404);
+        }
+        $request->validate([
+            'title'=>'required|string|max:255',
+            'author'=>'required|string',
+            'description'=>'required|string|max:255',
+        ],[
+            'title.required'=>'Title is required',
+            'author.required'=>'Author is required',
+            'description.required'=>'Description is required',
+        ]);
+        $updated=$book->update([
+            'title'=>$request->title,
+            'author'=>$request->author,
+            'description'=>$request->description
+        ]);
+        if($updated){
+            return response()->json(['message' => 'Book updated successfully'], 200);
+        }
+        return response()->json(['message' => 'Book not updated'], 500);
+    }
+    public function edit($id){
+        $book=Book::find($id);
+        If(!$book){
+            return response()->json(['message' => 'Book not found'], 404);
+        }
+        return response()->json($book->toArray());
     }
 }
