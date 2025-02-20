@@ -1,0 +1,51 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Book;
+use Illuminate\Http\Request;
+use App\Http\Resources\BookResource;
+
+class BookController extends Controller
+{
+    public function index(){
+        $books = Book::all();
+       return response($books,200);
+    }
+    public function show($id){
+        $book=Book::find($id);
+        if(!$book){
+            return response()->json(['message' => 'Book not found'], 404);
+        }
+        return response()->json($book->toArray());
+    }
+    public function destroy(Book $book, $id){
+        $book=Book::find($id);
+        if(!$book){
+           return response()->json(['message' => 'Book not found'], 404); 
+        }
+        $book->delete();
+        return response()->json(['message' => 'Book deleted successfully'], 200);
+    }
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'author' => 'required|string',
+            'description' => 'required|string|max:255',
+        ],[
+            'title.required'=>'Title is required',
+            'author.required'=>'Author is required',
+            'description.required'=>'Description is required',
+        ]);
+        $create=Book::create([
+            'title'=>$request->title,
+            'author'=>$request->author, 
+            'description'=>$request->description
+        ]);
+        if($create){
+            return response(['message' => 'Book created successfully'], 201);
+        }
+        return response(['error' => 'Book not created'], 500);
+    }
+}
