@@ -44,7 +44,7 @@ class BookController extends Controller
             'description'=>$request->description
         ]);
         if($create){
-            return response()->json(['message' => 'Book created successfully'], 201);
+            return response()->json(['message' => 'Book created successfully','book'=>$create], 201);
         }
         return response()->json(['message' => 'Book not created'], 500);
     }
@@ -68,7 +68,7 @@ class BookController extends Controller
             'description'=>$request->description
         ]);
         if($updated){
-            return response()->json(['message' => 'Book updated successfully'], 200);
+            return response()->json(['message' => 'Book updated successfully','book'=>$book], 200);
         }
         return response()->json(['message' => 'Book not updated'], 500);
     }
