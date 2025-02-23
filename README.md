@@ -64,16 +64,18 @@ php artisan serve
 ## Description of Usual Server Response
 
 -   200 `OK` : Request was successful
--   404 `Not found` : Request data was not found
--   500 `Internal server error` :
+-   201 `Created` : The request succeeded, and a new resource was created as a result.
+-   404 `Not found` : he server cannot find the requested resource. In the browser, this means the URL is not recognized.
+-   422 `unproccessable content` : The request was well-formed but was unable to be followed due to semantic errors
 
 ## Book Attributes
 
--   `id` :
--   `title` :
--   `author` :
--   `description` :
--   `created_at` :
+-   _`id` : Unique identifier (Primary key)_
+-   _`title` : Title of the Book_
+-   _`author` : Name of Book Author_
+-   _`description` : Description of the Book_
+-   _`created_at` : The timestamp when the book was created_
+-   _`updated_at` : The timestamp when the book was last updated_
 
 ## API Endpoints
 
@@ -162,9 +164,7 @@ php artisan serve
         "id": 4,
         "title": "Demo",
         "author": "King_jamal",
-        "description": "this is description of the book",
-        "created_at": "2025-02-22T04:04:45.000000Z",
-        "updated_at": "2025-02-22T04:04:45.000000Z"
+        "description": "this is description of the book"
     }
 }
 ```
@@ -216,3 +216,11 @@ php artisan serve
     "message": "Book deleted successfuly"
 }
 ```
+
+## Contribution
+
+If you would like to contribute to this project, please submit a pull request or open an issue in the repository.
+
+---
+
+**Note:** This documentation may be updated as the project evolves. Always refer to the main repository for the latest updates.
