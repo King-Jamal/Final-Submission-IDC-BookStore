@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use App\Http\Resources\BookResource;
+use Illuminate\Support\Facades\Validator;
 
 class BookController extends Controller
 {
@@ -29,48 +30,37 @@ class BookController extends Controller
     }
     public function store(Request $request)
     {
-        $request->validate([
+        $validator=Validator::make($request->all(),[
             'title' => 'required|string|max:255',
             'author' => 'required|string',
             'description' => 'required|string|max:255',
-        ],[
-            'title.required'=>'Title is required',
-            'author.required'=>'Author is required',
-            'description.required'=>'Description is required',
         ]);
-        $create=Book::create([
-            'title'=>$request->title,
-            'author'=>$request->author, 
-            'description'=>$request->description
-        ]);
-        if($create){
-            return response()->json(['message' => 'Book created successfully','book'=>$create], 201);
+        if($validator->fails()){
+            return response()->json(['message' => 'Book not created','error'=>$validator->errors()], 422);
         }
-        return response()->json(['message' => 'Book not created'], 500);
+            return response()->json(['message' => 'Book created successfully','book'=>$validator->validated()], 201);
+        
     }
     public function update(Request $request,$id){
         $book=Book::find($id);
         if(!$book){
             return response()->json(['message' => 'Book not found'], 404);
         }
-        $request->validate([
-            'title'=>'required|string|max:255',
-            'author'=>'required|string',
-            'description'=>'required|string|max:255',
-        ],[
-            'title.required'=>'Title is required',
-            'author.required'=>'Author is required',
-            'description.required'=>'Description is required',
+        $validator = Validator::make($request->all(), [
+            'title'       => 'required|string|max:255',
+            'author'      => 'required|string',
+            'description' => 'required|string|max:255',
         ]);
-        $updated=$book->update([
-            'title'=>$request->title,
-            'author'=>$request->author,
-            'description'=>$request->description
-        ]);
-        if($updated){
-            return response()->json(['message' => 'Book updated successfully','book'=>$book], 200);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Book update failed',
+                'errors'  => $validator->errors()
+            ], 422);
         }
-        return response()->json(['message' => 'Book not updated'], 500);
+    
+        $book->update($validator->validated());
+        return response()->json(['message' => 'Book updated successfully', 'book' => $book], 200);
     }
     public function edit($id){
         $book=Book::find($id);
