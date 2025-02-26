@@ -38,7 +38,8 @@ class BookController extends Controller
         if($validator->fails()){
             return response()->json(['message' => 'Book not created','error'=>$validator->errors()], 422);
         }
-            return response()->json(['message' => 'Book created successfully','book'=>$validator->validated()], 201);
+        $book = Book::create($validator->validated());
+            return response()->json(['message' => 'Book created successfully','book'=>$book], 201);
         
     }
     public function update(Request $request,$id){
